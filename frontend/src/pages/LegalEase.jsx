@@ -653,7 +653,7 @@ Rules:
 }
 
 // ── App root ─────────────────────────────────────────────────────────────────
-export default function App() {
+export default function LegalEase() {
   const [stage, setStage] = useState("upload"); // upload | loading | result
   const [result, setResult] = useState(null);
   const [fileName, setFileName] = useState("");
