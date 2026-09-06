@@ -1,0 +1,56 @@
+# ── Python ────────────────────────────────────────────────
+venv/
+backend/venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pyw
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# ── Environment & Secrets ─────────────────────────────────
+.env
+*.env
+.env.local
+.env.development
+.env.production
+
+# ── FastAPI / Backend Temp Files ──────────────────────────
+backend/uploads/
+backend/reports/
+*.index
+
+# ── Node / Frontend ───────────────────────────────────────
+node_modules/
+frontend/dist/
+frontend/build/
+.npm
+
+# ── Logs ──────────────────────────────────────────────────
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ── OS Files ──────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# ── IDE ───────────────────────────────────────────────────
+.vscode/
+.idea/
+*.suo
+*.user
+
+# ── Testing ───────────────────────────────────────────────
+.pytest_cache/
+htmlcov/
+.coverage
+
+# ── Docker ────────────────────────────────────────────────
+*.env.docker
