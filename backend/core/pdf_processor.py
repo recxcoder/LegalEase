@@ -1,4 +1,4 @@
-import fitz     # PyMuPDF
+import pymupdf as fitz
 import pdfplumber
 import os
 
