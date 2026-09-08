@@ -5,6 +5,7 @@ from core.ai_pipeline import analyze_contract
 from core.scoring import calculate_power_score
 from core.report_generator import generate_report
 from config import UPLOAD_DIR
+import os
 
 router = APIRouter()
 
@@ -18,7 +19,7 @@ async def analyze(body: dict):
     
     file_path = os.path.join(UPLOAD_DIR, f"{file_id}.pdf")
 
-    if not os.path.exists(fiel_path):
+    if not os.path.exists(file_path):
         raise HTTPException(statuse_code=404, detail="File not found")
 
     try:
@@ -48,7 +49,7 @@ async def analyze(body: dict):
             "report_id": report_id
         }
 
-    except HTTPExecution:
+    except HTTPException:
         raise
     except Exception as e:
-        raise HTTPExecution(status_code=500, details=str(e))
+        raise HTTPException(status_code=500, detail=str(e))

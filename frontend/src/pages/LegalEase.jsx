@@ -291,8 +291,8 @@ function ClauseCard({ clause }) {
     clause.severity === "Red flag"
       ? COLORS.redDim
       : clause.severity === "Warning"
-      ? "#7a5000"
-      : "#1a5c38";
+        ? "#7a5000"
+        : "#1a5c38";
 
   return (
     <div
@@ -433,29 +433,39 @@ function ResultsScreen({ result, fileName, onReset }) {
   const visible =
     filter === "red" ? redFlags : filter === "warning" ? warnings : clauses;
 
-  const handleDownload = () => {
-    const lines = [
-      `LEGALEASE CONTRACT ANALYSIS REPORT`,
-      `File: ${fileName}`,
-      `Date: ${new Date().toLocaleDateString()}`,
-      `Power Balance Score: ${score}/100`,
-      ``,
-      `SUMMARY`,
-      `Red Flags: ${redFlags.length}  |  Warnings: ${warnings.length}  |  Safe Clauses: ${safe.length}`,
-      ``,
-      `CLAUSES`,
-      ...clauses.map(
-        (c) =>
-          `[${c.severity.toUpperCase()}] ${c.name} (${c.reference})\n  Quote: "${c.quote}"\n  Plain English: ${c.plain}\n`
-      ),
-    ].join("\n");
+  const handleDownload = async () => {
+    if (result.report_id) {
+      // Download from backend
+      const res = await fetch(
+        `http://localhost:8000/api/download/${result.report_id}`
+      )
+      const blob = await res.blob()
+      const a = document.createElement("a")
+      a.href = URL.createObjectURL(blob)
+      a.download = "LegalEase_Report.txt"
+      a.click()
+    } else {
+      // Fallback — generate locally
+      const lines = [
+        `LEGALEASE CONTRACT ANALYSIS REPORT`,
+        `File: ${fileName}`,
+        `Power Balance Score: ${score}/100`,
+        `Red Flags: ${redFlags.length}`,
+        `Warnings: ${warnings.length}`,
+        `Safe Clauses: ${safe.length}`,
+        ``,
+        ...clauses.map(c =>
+          `[${c.severity.toUpperCase()}] ${c.name}\n  ${c.plain}\n`
+        )
+      ].join("\n")
 
-    const blob = new Blob([lines], { type: "text/plain" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "LegalEase_Report.txt";
-    a.click();
-  };
+      const blob = new Blob([lines], { type: "text/plain" })
+      const a = document.createElement("a")
+      a.href = URL.createObjectURL(blob)
+      a.download = "LegalEase_Report.txt"
+      a.click()
+    }
+  }
 
   return (
     <div style={{ display: "flex", height: "calc(100vh - 56px)" }}>
@@ -599,57 +609,46 @@ function ResultsScreen({ result, fileName, onReset }) {
 }
 
 // ── AI Analysis ──────────────────────────────────────────────────────────────
-async function analyzeContract(base64Pdf, fileName) {
-  const prompt = `You are a contract risk analyst. Analyze this contract PDF and return a JSON object (no markdown, no backticks, pure JSON) with this exact shape:
-
-{
-  "score": <integer 0-100 where 100 = heavily favors the company/other party, 0 = heavily favors you>,
-  "clauses": [
-    {
-      "severity": "Red flag" | "Warning" | "Safe",
-      "name": "<short clause name>",
-      "reference": "<Clause X.X or Section X>",
-      "quote": "<verbatim excerpt from the contract, max 2 sentences>",
-      "plain": "<plain English explanation of what this means for the signer>"
-    }
-  ]
+function base64ToBlob(base64) {
+  const bytes = atob(base64)
+  const arr = new Uint8Array(bytes.length)
+  for (let i = 0; i < bytes.length; i++) {
+    arr[i] = bytes.charCodeAt(i)
+  }
+  return new Blob([arr], { type: "application/pdf" })
 }
 
-Rules:
-- Include ALL significant clauses (aim for 8-16 total).
-- Red flags are clauses that are strongly one-sided, potentially illegal, or commonly waive important rights.
-- Warnings are unusual or restrictive but not extreme.
-- Safe clauses are standard, fair, or protective of the signer.
-- Keep quotes verbatim from the document.
-- Keep plain English explanations under 20 words, direct and practical.
-- Return ONLY the JSON object, nothing else.`;
+async function analyzeContract(base64Pdf, fileName) {
+  // Step 1 — Upload PDF to backend
+  const formData = new FormData()
+  const blob = base64ToBlob(base64Pdf)
+  formData.append("file", blob, fileName)
 
-  const response = await fetch("https://api.anthropic.com/v1/messages", {
+  const uploadRes = await fetch("http://localhost:8000/api/upload", {
+    method: "POST",
+    body: formData
+  })
+
+  if (!uploadRes.ok) {
+    const err = await uploadRes.json()
+    throw new Error(err.detail || "Upload failed")
+  }
+
+  const { file_id } = await uploadRes.json()
+
+  // Step 2 — Analyze via backend
+  const analyzeRes = await fetch("http://localhost:8000/api/analyze", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      model: "claude-sonnet-4-6",
-      max_tokens: 1000,
-      messages: [
-        {
-          role: "user",
-          content: [
-            {
-              type: "document",
-              source: { type: "base64", media_type: "application/pdf", data: base64Pdf },
-            },
-            { type: "text", text: prompt },
-          ],
-        },
-      ],
-    }),
-  });
+    body: JSON.stringify({ file_id, file_name: fileName })
+  })
 
-  if (!response.ok) throw new Error(`API error ${response.status}`);
-  const data = await response.json();
-  const raw = data.content.map((b) => b.text || "").join("");
-  const clean = raw.replace(/```json|```/g, "").trim();
-  return JSON.parse(clean);
+  if (!analyzeRes.ok) {
+    const err = await analyzeRes.json()
+    throw new Error(err.detail || "Analysis failed")
+  }
+
+  return await analyzeRes.json()
 }
 
 // ── App root ─────────────────────────────────────────────────────────────────
