@@ -442,7 +442,7 @@ function ResultsScreen({ result, fileName, onReset }) {
       const blob = await res.blob()
       const a = document.createElement("a")
       a.href = URL.createObjectURL(blob)
-      a.download = "LegalEase_Report.txt"
+      a.download = "LegalEase_Report.pdf"
       a.click()
     } else {
       // Fallback — generate locally
