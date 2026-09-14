@@ -1,8 +1,8 @@
-from reportlab.lib.pages.pagesizes import letter, A4
+from reportlab.lib.pagesizes import letter, A4
 from reportlab.lib import colors
-from reportlab.lib.styles import getSampleSheet, ParagraphStyle
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.units import inch
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, HRFlowable
-from reportlab.units import inch
 from reportlab.lib.enums import TA_CENTER, TA_LEFT
 from config import REPORTS_DIR
 import os
@@ -14,7 +14,7 @@ def generate_report(
     file_name: str
 ) -> str:
     report_id = str(uuid.uuid4())
-    path = os.path.join(REPORTS_DIR, f"{report_id}.txt")
+    path = os.path.join(REPORTS_DIR, f"{report_id}.pdf")
 
     doc = SimpleDocTemplate(
         path,
