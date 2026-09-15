@@ -437,7 +437,7 @@ function ResultsScreen({ result, fileName, onReset }) {
     if (result.report_id) {
       // Download from backend
       const res = await fetch(
-        `http://localhost:8000/api/download/${result.report_id}`
+        `https://legalease-backend-4lof.onrender.com/api/download/${result.report_id}`
       )
       const blob = await res.blob()
       const a = document.createElement("a")
@@ -624,7 +624,7 @@ async function analyzeContract(base64Pdf, fileName) {
   const blob = base64ToBlob(base64Pdf)
   formData.append("file", blob, fileName)
 
-  const uploadRes = await fetch("http://localhost:8000/api/upload", {
+  const uploadRes = await fetch("https://legalease-backend-4lof.onrender.com/api/upload", {
     method: "POST",
     body: formData
   })
@@ -637,7 +637,7 @@ async function analyzeContract(base64Pdf, fileName) {
   const { file_id } = await uploadRes.json()
 
   // Step 2 — Analyze via backend
-  const analyzeRes = await fetch("http://localhost:8000/api/analyze", {
+  const analyzeRes = await fetch("https://legalease-backend-4lof.onrender.com/api/analyze", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ file_id, file_name: fileName })
