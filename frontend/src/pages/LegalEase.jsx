@@ -138,7 +138,7 @@ function UploadScreen({ onFile, loading }) {
             fontWeight: "500",
           }}
         >
-          <span>⟳</span> AI-powered contract analysis
+          <span>◈</span> AI-powered contract analysis
         </div>
         <h1
           style={{
