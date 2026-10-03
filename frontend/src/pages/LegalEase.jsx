@@ -83,19 +83,204 @@ function Logo() {
   );
 }
 
+// ── About Modal ──────────────────────────────────────────────────────────────
+function AboutModal({ onClose }) {
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position: "fixed", inset: 0, zIndex: 999,
+        background: "rgba(0,0,0,0.7)",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        padding: "24px",
+      }}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          background: "#1a1a1a",
+          border: "1px solid #2a2a2a",
+          borderRadius: "16px",
+          padding: "36px",
+          maxWidth: "560px",
+          width: "100%",
+          maxHeight: "85vh",
+          overflowY: "auto",
+          position: "relative",
+        }}
+      >
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          style={{
+            position: "absolute", top: "16px", right: "16px",
+            background: "transparent", border: "none",
+            color: "#888", fontSize: "20px", cursor: "pointer",
+          }}
+        >✕</button>
+
+        {/* Header */}
+        <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "20px" }}>
+          <div style={{
+            width: "40px", height: "40px", background: "#c0392b",
+            borderRadius: "10px", display: "flex", alignItems: "center",
+            justifyContent: "center", fontSize: "20px",
+          }}>⚖</div>
+          <div>
+            <h2 style={{ margin: 0, fontSize: "20px", fontWeight: "800", color: "#f0f0f0" }}>
+              LegalEase
+            </h2>
+            <p style={{ margin: 0, fontSize: "12px", color: "#888" }}>
+              AI-Powered Contract Analyzer
+            </p>
+          </div>
+        </div>
+
+        {/* Divider */}
+        <div style={{ borderTop: "1px solid #2a2a2a", marginBottom: "20px" }} />
+
+        {/* About */}
+        <p style={{ color: "#ccc", fontSize: "14px", lineHeight: "1.7", marginBottom: "20px" }}>
+          LegalEase helps you understand what you're actually signing.
+          Upload any contract PDF and get instant AI-powered analysis —
+          red flag detection, plain English explanations, and a power
+          balance score that shows who the contract really favors.
+        </p>
+
+        {/* Features */}
+        <div style={{ marginBottom: "24px" }}>
+          <p style={{ fontSize: "11px", color: "#555", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "10px" }}>
+            What it does
+          </p>
+          {[
+            { icon: "🚩", text: "Detects risky clauses — non-compete, IP assignment, auto-renewal, indemnity" },
+            { icon: "💬", text: "Explains every clause in plain English — no legal degree needed" },
+            { icon: "⚖️", text: "Power balance score (0–100) — see who the contract favors" },
+            { icon: "📄", text: "Download a full flagged PDF report to keep or share" },
+          ].map(({ icon, text }) => (
+            <div key={text} style={{
+              display: "flex", gap: "10px", alignItems: "flex-start",
+              padding: "8px 0", borderBottom: "1px solid #222",
+            }}>
+              <span style={{ fontSize: "16px", flexShrink: 0 }}>{icon}</span>
+              <span style={{ fontSize: "13px", color: "#bbb", lineHeight: "1.5" }}>{text}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Tech Stack */}
+        <div style={{ marginBottom: "24px" }}>
+          <p style={{ fontSize: "11px", color: "#555", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "10px" }}>
+            Built with
+          </p>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+            {["React", "FastAPI", "Python", "Gemini AI", "PyMuPDF", "ReportLab", "Render", "Vercel"].map((tech) => (
+              <span key={tech} style={{
+                background: "#222", border: "1px solid #333",
+                borderRadius: "20px", padding: "4px 12px",
+                fontSize: "12px", color: "#aaa",
+              }}>{tech}</span>
+            ))}
+          </div>
+        </div>
+
+        {/* Use Cases */}
+        <div style={{ marginBottom: "24px" }}>
+          <p style={{ fontSize: "11px", color: "#555", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "10px" }}>
+            Perfect for
+          </p>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+            {["🎓 Students", "🏠 Tenants", "💼 Freelancers", "🚀 Founders"].map((u) => (
+              <span key={u} style={{
+                background: "rgba(192,57,43,0.1)", border: "1px solid rgba(192,57,43,0.3)",
+                borderRadius: "20px", padding: "4px 12px",
+                fontSize: "12px", color: "#c0392b",
+              }}>{u}</span>
+            ))}
+          </div>
+        </div>
+
+        {/* Links */}
+        <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+          <a
+            href="https://github.com/recxcoder/LegalEase"
+            target="_blank"
+            rel="noreferrer"
+            style={{
+              display: "flex", alignItems: "center", gap: "6px",
+              background: "#222", border: "1px solid #333",
+              borderRadius: "8px", padding: "9px 16px",
+              fontSize: "13px", color: "#f0f0f0",
+              textDecoration: "none", fontWeight: "600",
+            }}
+          >
+            ★ GitHub Repo
+          </a>
+          <a
+            href="https://legalease-backend-4lof.onrender.com/docs"
+            target="_blank"
+            rel="noreferrer"
+            style={{
+              display: "flex", alignItems: "center", gap: "6px",
+              background: "#222", border: "1px solid #333",
+              borderRadius: "8px", padding: "9px 16px",
+              fontSize: "13px", color: "#f0f0f0",
+              textDecoration: "none", fontWeight: "600",
+            }}
+          >
+            ⚡ API Docs
+          </a>
+          <a
+            href="https://getlegalease.vercel.app"
+            target="_blank"
+            rel="noreferrer"
+            style={{
+              display: "flex", alignItems: "center", gap: "6px",
+              background: "#c0392b", border: "none",
+              borderRadius: "8px", padding: "9px 16px",
+              fontSize: "13px", color: "#fff",
+              textDecoration: "none", fontWeight: "600",
+            }}
+          >
+            🌐 Live App
+          </a>
+        </div>
+
+        {/* Disclaimer */}
+        <p style={{
+          marginTop: "20px", fontSize: "11px", color: "#444",
+          lineHeight: "1.6", borderTop: "1px solid #222", paddingTop: "16px",
+        }}>
+          ⚠ LegalEase is for informational purposes only and does not
+          constitute legal advice. Always consult a qualified lawyer for
+          important legal decisions.
+        </p>
+      </div>
+    </div>
+  );
+}
+
 // ── Nav ─────────────────────────────────────────────────────────────────────
 function Nav({ onReset }) {
+  const [showAbout, setShowAbout] = useState(false);
+
   return (
-    <nav style={S.nav}>
-      <div onClick={onReset} style={{ cursor: "pointer" }}>
-        <Logo />
-      </div>
-      <div style={S.navLinks}>
-        {["How it works", "Examples", "About"].map((l) => (
-          <span key={l} style={S.navLink}>{l}</span>
-        ))}
-      </div>
-    </nav>
+    <>
+      <nav style={S.nav}>
+        <div onClick={onReset} style={{ cursor: "pointer" }}>
+          <Logo />
+        </div>
+        <div style={S.navLinks}>
+          <span
+            style={{ ...S.navLink, cursor: "pointer" }}
+            onClick={() => setShowAbout(true)}
+          >
+            About
+          </span>
+        </div>
+      </nav>
+      {showAbout && <AboutModal onClose={() => setShowAbout(false)} />}
+    </>
   );
 }
 
