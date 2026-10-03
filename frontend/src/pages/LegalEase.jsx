@@ -77,7 +77,11 @@ const S = {
 function Logo() {
   return (
     <div style={S.logo}>
-      <div style={S.logoIcon}>⚖</div>
+      <img
+        src="/logo.png"
+        alt="LegalEase"
+        style={{ height: "28px", width: "auto", objectFit: "contain" }}
+      />
       LegalEase
     </div>
   );
