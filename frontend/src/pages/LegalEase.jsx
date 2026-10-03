@@ -125,11 +125,7 @@ function AboutModal({ onClose }) {
 
         {/* Header */}
         <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "20px" }}>
-          <div style={{
-            width: "40px", height: "40px", background: "#c0392b",
-            borderRadius: "10px", display: "flex", alignItems: "center",
-            justifyContent: "center", fontSize: "20px",
-          }}>⚖</div>
+          <img src="/logo.png" alt="LegalEase" style={{ height: "40px", width: "auto", objectFit: "contain" }} />
           <div>
             <h2 style={{ margin: 0, fontSize: "20px", fontWeight: "800", color: "#f0f0f0" }}>
               LegalEase
